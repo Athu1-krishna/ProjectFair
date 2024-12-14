@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import img from '../assets/hero-img.gif'
 import ProjectCard from '../components/ProjectCard'
@@ -7,6 +7,14 @@ import user1 from '../assets/user1.png'
 import user2 from '../assets/user2.png'
 import user3 from '../assets/user3.png'
 const Home = () => {
+  const [isLogin, setIsLogin] = useState(false)
+  useEffect(()=> {
+    if(sessionStorage.getItem("token")){
+      setIsLogin(true)
+    }else{
+      setIsLogin(false)
+    }
+  },[])
   return (
     <>
          {/* landing */}
@@ -16,7 +24,13 @@ const Home = () => {
                       <div className="col-lg-6 p-5">
                           <h1 style={{ fontSize: '60px' }}><i className='fa-brands fa-docker'></i> Project Fair</h1>
                           <p style={{ textAlign: 'justify' }}>One stop destination for all Software Development Projects. Where user can add and manage their projects. As well as access all projects available in our website ... What are you waiting for !</p>
-                          <Link to={'/login'} className='btn btn-info'>START TO EXPLORE</Link>
+                          {
+                            isLogin
+                            ?
+                             <Link to={'/dashboard'} className='btn btn-info'>MANAGE PROJECTS</Link>
+                            :
+                             <Link to={'/login'} className='btn btn-info'>START TO EXPLORE</Link>
+                          }
                       </div>
                       <div className="col-lg-6">
                           <img className='img-fluid' src={img} alt="hero image" />

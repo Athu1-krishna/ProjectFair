@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { Card, Modal } from 'react-bootstrap'
+import SERVER_BASE_URL from '../services/serverURL';
 
-const ProjectCard = () => {
+const ProjectCard = ({ displayData }) => {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -10,9 +11,9 @@ const ProjectCard = () => {
   return (
     <>
       <Card onClick={handleShow} className='btn shadow'>
-        <Card.Img height={'200px'} variant="top" src="holder.js/100px180" />
+        <Card.Img height={'200px'} variant="top" src={`${SERVER_BASE_URL}/uploads/${displayData?.projectImage}`} />
         <Card.Body>
-          <Card.Title>Card Title</Card.Title>
+          <Card.Title>{displayData?.title}</Card.Title>
         </Card.Body>
       </Card>
 
@@ -24,17 +25,17 @@ const ProjectCard = () => {
         <Modal.Body>
           <div className="row">
             <div className="col-lg-6">
-              <img className='img-fluid' src="" alt="Project image" />
+              <img className='img-fluid' src={`${SERVER_BASE_URL}/uploads/${displayData?.projectImage}`} alt="Project image" />
             </div>
             <div className="col-lg-6">
-              <h3>Title</h3>
-              <h5>Languages used <span className='text-danger'>Languages</span></h5>
-              <p style={{textAlign:'justify'}}> <span className='fw-bolder'> Overview : </span>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Maxime odio animi repellendus ipsam laboriosam reprehenderit bl</p>
+              <h2 className='text-success'>{displayData?.title}</h2>
+              <p className='fw-bold'>Languages used : <span className='text-danger'>{displayData?.languages}</span></p>
+              <p style={{textAlign:'justify'}}> <span className='fw-bolder'> Overview : </span> {displayData?.overview}</p>
             </div>
           </div>
           <div className="mt-2 float-start">
-            <a href="https://react-bootstrap.netlify.app/docs/components/modal" target='_blank' className='btn bg-body-secondary me-2 hover:shadow '><i className="fa-brands fa-github fs-4 "></i></a>
-            <a href="https://react-bootstrap.netlify.app/docs/components/modal" target='_blank' className='btn bg-body-secondary hover:shadow '><i className="fa-solid fa-link fs-4"></i></a>
+            <a href={displayData?.github} target='_blank' className='btn bg-body-secondary me-2 hover:shadow '><i className="fa-brands fa-github fs-4 "></i></a>
+            <a href={displayData?.website} target='_blank' className='btn bg-body-secondary hover:shadow '><i className="fa-solid fa-link fs-4"></i></a>
           </div>
         </Modal.Body>
       </Modal>

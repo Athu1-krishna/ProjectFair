@@ -1,20 +1,52 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import img from '../assets/hero-img.gif'
 import ProjectCard from '../components/ProjectCard'
 import { Card } from 'react-bootstrap'
 import user1 from '../assets/user1.png'
 import user2 from '../assets/user2.png'
 import user3 from '../assets/user3.png'
+import { homeProjectsAPI } from '../services/allAPI'
+
 const Home = () => {
+  const navigate = useNavigate()
+  const [homeProjects, setHomeProjects] = useState([])
+  // console.log(homeProjects);
+  
   const [isLogin, setIsLogin] = useState(false)
   useEffect(()=> {
+    getHomeProjects()
     if(sessionStorage.getItem("token")){
       setIsLogin(true)
     }else{
       setIsLogin(false)
     }
   },[])
+
+  const getHomeProjects = async () => {
+    try{
+      const result = await homeProjectsAPI()
+      console.log(result);
+      if(result.status == 200){
+        setHomeProjects(result.data)
+      }
+      
+    }catch(err){
+      console.log(err);
+      
+    }
+  }
+
+  const handleNavigateToProject = () => {
+    // user is login?
+    if(sessionStorage.getItem('token')){
+      // authorized user then redirect 
+      navigate('/projects')
+    }else{
+      // not an authorized user, then alert please login
+      alert("Please login to get full access to the project Collection!")
+    }
+  }
   return (
     <>
          {/* landing */}
@@ -43,12 +75,16 @@ const Home = () => {
             <h2 className='my-5 mt-3'>Explore Our Projects</h2>
             <marquee behavior="" direction="">
                 <div className="d-flex">
-                    <div className="me-5">
-                        <ProjectCard/>
-                    </div>
+                    {
+                      homeProjects?.map(project=>(
+                        <div className="me-5">
+                          <ProjectCard displayData={project} />
+                        </div>
+                      ))
+                    }
                 </div>
             </marquee>
-            <button className="btn btn-link mt-5">Click here to view more Projects...</button>
+            <button onClick={handleNavigateToProject} className="btn btn-link mt-5">Click here to view more Projects...</button>
          </div>
          {/* our testimonial */}
          <div className="d-flex align-items-center justify-content-center my-5 flex-column">
